@@ -37,7 +37,7 @@ jobs:
 
   release:
     name: Release
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: [switch, psvita, android, apple, windows, linux]
     permissions:
       contents: write
