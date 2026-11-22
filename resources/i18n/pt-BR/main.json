@@ -129,6 +129,7 @@
         "debug": "Debug",
         "debugging_view": "Mostrar janela de debug",
         "decoder_threads": "Decor Threads",
+        "frame_buffer": "Frame buffer",
         "fps": "FPS",
         "guide_key": "Tecla Guia (Clique imediato)",
         "guide_key_buttons": "Combinação de botões",

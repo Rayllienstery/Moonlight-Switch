@@ -241,7 +241,13 @@ class Settings : public Singleton<Settings> {
     void set_decoder_threads(int decoder_threads) { m_decoder_threads = decoder_threads; }
     [[nodiscard]] int decoder_threads() const { return m_decoder_threads; }
 
-    void set_frames_queue_size(int frames_queue_size) { m_frames_queue_size = frames_queue_size; }
+    void set_frames_queue_size(int frames_queue_size) {
+        if (frames_queue_size < 1)
+            frames_queue_size = 1;
+        else if (frames_queue_size > 4)
+            frames_queue_size = 4;
+        m_frames_queue_size = frames_queue_size;
+    }
     [[nodiscard]] int frames_queue_size() const { return m_frames_queue_size; }
 
     void set_sops(bool sops) { m_sops = sops; }

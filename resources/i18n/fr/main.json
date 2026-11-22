@@ -129,6 +129,7 @@
         "debug": "Debug",
         "debugging_view": "Afficher la vue Debug",
         "decoder_threads": "Threads de décodage",
+        "frame_buffer": "Frame buffer",
         "fps": "FPS",
         "guide_key": "Bouton Guide (s'ouvre immédiatement)",
         "guide_key_buttons": "Combinaison de boutons",

@@ -368,8 +368,11 @@ void Settings::load() {
                 if (json_typeof(frames_queue_size) == JSON_INTEGER) {
                     m_frames_queue_size = (int)json_integer_value(frames_queue_size);
 
-                    // SANITY CHECK, APP WILL CRASH OTHERWISE
-                    if (m_frames_queue_size < 1) m_frames_queue_size = 1;
+                    // The displayed frame is the minimum. Zero crashes the queue setup.
+                    if (m_frames_queue_size < 1)
+                        m_frames_queue_size = 1;
+                    else if (m_frames_queue_size > 4)
+                        m_frames_queue_size = 4;
                 }
             }
 
