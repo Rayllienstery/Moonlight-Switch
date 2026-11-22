@@ -140,11 +140,13 @@ if (DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
 endif ()
 
 add_definitions(
-        -DAPP_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER} (${VERSION_CHANNEL})"
         -Dcimg_display=0
         -Dcimg_use_png
         -Dcimg_no_system_calls
         -DBRLS_I18N_PREFIX=\"main/\")
+
+# add_definitions splits on the space in "1.6.1 (Dev)" and leaves the macro empty.
+add_compile_definitions("APP_VERSION=\"${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER} (${VERSION_CHANNEL})\"")
 
 if (PLATFORM_PSV OR PLATFORM_ANDROID)
     set(USE_OPENSSL_CRYPTO ON)
@@ -410,7 +412,7 @@ elseif (PLATFORM_SWITCH)
         set(MOONLIGHT_NRO_NAME "Moonlight-Switch")
     endif ()
     add_custom_target(${MOONLIGHT_NRO_NAME}.nro DEPENDS ${PROJECT_NAME}
-        COMMAND ${NX_NACPTOOL_EXE} --create "${PROJECT_NAME}" "${PROJECT_AUTHOR}" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER} (${VERSION_CHANNEL})" ${PROJECT_NAME}.nacp --titleid=${PROJECT_TITLEID}
+        COMMAND ${NX_NACPTOOL_EXE} --create "${PROJECT_NAME}" "${PROJECT_AUTHOR}" "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER}" ${PROJECT_NAME}.nacp --titleid=${PROJECT_TITLEID}
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/resources
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_RESOURCES} ${CMAKE_BINARY_DIR}/resources
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR}/resources/font
