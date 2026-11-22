@@ -18,3 +18,17 @@ Replace it with a live reason, and keep the message on screen for 10 seconds aft
 - Which of those hit 100%, and which one did not keep up
 
 The 10 second hold is so a one-frame spike can still be read.
+
+## Better logging
+
+`write_log` exists and defaults to off. The messages behind it are scattered `Logger` lines. A later reader, including an AI, cannot reconstruct a fault from them.
+
+When something goes wrong, write one session log that states the facts in order:
+
+- When it happened, and the host, resolution, fps, codec, bitrate, and frame-buffer setting in effect
+- Network: throughput, loss, jitter, and whether the link was below the requested bitrate
+- CPU and GPU: what was at 100%, and what missed the 60 Hz flip
+- Decoder: hardware or software, queue depth, dropped frames, and the Bad connection reason above
+- The seconds before the fault, not only the single error line
+
+Plain sentences, with the numbers next to them. No need to guess which counter a bare integer was.
