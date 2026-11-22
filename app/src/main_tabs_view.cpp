@@ -7,6 +7,8 @@
 
 #include "main_tabs_view.hpp"
 #include "Settings.hpp"
+
+#include <string>
 #include "about_tab.hpp"
 #include "add_host_tab.hpp"
 #include "host_tab.hpp"
@@ -23,6 +25,8 @@ MainTabs::MainTabs() {
 
 void MainTabs::willAppear(bool resetState) {
     Box::willAppear(resetState);
+    getAppletFrameItem()->title = std::string("Moonlight ") + APP_VERSION;
+    updateAppletFrameItem();
     updateFavoritesIfNeeded();
     favoriteTab->refreshIfNeeded();
 }
