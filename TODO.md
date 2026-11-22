@@ -28,6 +28,7 @@ When something goes wrong, write one session log that states the facts in order:
 - When it happened, and the host, resolution, fps, codec, bitrate, and frame-buffer setting in effect
 - Network: throughput, loss, jitter, and whether the link was below the requested bitrate
 - CPU and GPU: what was at 100%, and what missed the 60 Hz flip
+- Switch clocks at that moment, in MHz: CPU, GPU, RAM, and every other clock the console reports. Handheld and docked clocks differ, so write the measured number, next to the load, not a profile name
 - Decoder: hardware or software, queue depth, dropped frames, and the Bad connection reason above
 - The seconds before the fault, not only the single error line
 
