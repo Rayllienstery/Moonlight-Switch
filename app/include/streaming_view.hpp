@@ -53,7 +53,10 @@ class StreamingView : public brls::Box {
     bool m_use_hdr = false;
     TwoFingerScrollGestureRecognizer* scrollTouchRecognizer = nullptr;
     brls::Event<bool>::Subscription windowFocusSubscription;
-    bool windowFocused = true;
+    // Set by onWindowFocusChanged and acted on in draw(). terminate()
+    // dismisses this view from inside Event::fire, which is still walking
+    // its callback list, so the callback only records the intent.
+    bool pendingSuspendTerminate = false;
 
     void onWindowFocusChanged(bool focused);
 

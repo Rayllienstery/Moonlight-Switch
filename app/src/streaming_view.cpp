@@ -323,29 +323,35 @@ void StreamingView::onFocusLost() {
 }
 
 void StreamingView::onWindowFocusChanged(bool focused) {
-    if (windowFocused == focused)
+    if (focused || terminated)
         return;
 
-    windowFocused = focused;
-    Logger::info("StreamingView: window focus {}", focused ? "gained" : "lost");
-
-    if (!focused) {
-        // HOME menu or console sleep: stop sending input and stop rendering
-        // before the graphics service goes away underneath the session.
-        MoonlightInputManager::instance().dropInput();
-    }
-
-    session->set_suspended(!focused);
+    // Losing focus on Switch means the console is going to sleep or the HOME
+    // menu has taken over. Moonlight on Android ends the session at the
+    // equivalent point (Game.onStop calls stopConnection then finish). End
+    // the stream and return to the host list rather than carrying decoder
+    // and GPU state across a suspend.
+    //
+    // Nothing destructive happens here. This runs inside Event::fire, and
+    // terminate() would dismiss this view and unsubscribe from inside that
+    // iteration. Record the intent; draw() acts on it.
+    Logger::info("StreamingView: focus lost, will end the stream");
+    MoonlightInputManager::instance().setInputEnabled(false);
+    MoonlightInputManager::instance().dropInput();
+    pendingSuspendTerminate = true;
 }
 
 void StreamingView::draw(NVGcontext* vg, float x, float y, float width,
                          float height, Style style, FrameContext* ctx) {
-    // Off screen, run nothing: no stream, input or overlays. This comes before
-    // the termination check so a session dropped because the console turned
-    // wifi off for sleep is not torn down while the compositor is stopped; the
-    // check below picks it up on the first frame back.
-    if (!windowFocused)
+    if (pendingSuspendTerminate) {
+        // Focus was lost. Safe to tear down here: this is the main loop, not
+        // an event callback. When the loss was a console sleep this runs on
+        // the first frame after waking, which is also the first moment the
+        // graphics service is back.
+        pendingSuspendTerminate = false;
+        terminate(false);
         return;
+    }
 
     if (session->is_terminated()) {
         terminate(false);
