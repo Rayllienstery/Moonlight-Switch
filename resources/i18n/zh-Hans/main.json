@@ -129,6 +129,7 @@
         "debug": "调试",
         "debugging_view": "显示调试画面",
         "decoder_threads": "解码器线程",
+        "frame_buffer": "Frame buffer",
         "fps": "FPS",
         "guide_key": "向导键（立即按下）",
         "guide_key_buttons": "按键组合",
@@ -204,7 +205,8 @@
         "about": "关于",
         "add_host": "添加主机",
         "favorites": "最爱",
-        "settings": "设置"
+        "settings": "设置",
+        "raylees_tweaks": "Raylee's Tweaks"
     },
     "title": "Moonlight"
 }

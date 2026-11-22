@@ -129,6 +129,7 @@
         "debug": "Отладка",
         "debugging_view": "Показать окно отладки",
         "decoder_threads": "Потоки декодера",
+        "frame_buffer": "Буфер кадров",
         "fps": "FPS",
         "guide_key": "Кнопка \"Guide\" (нажимается немедленно)",
         "guide_key_buttons": "Комбинация кнопок",
@@ -204,7 +205,8 @@
         "about": "О программе",
         "add_host": "Добавить хост",
         "favorites": "Избранные",
-        "settings": "Настройки"
+        "settings": "Настройки",
+        "raylees_tweaks": "Raylee's Tweaks"
     },
     "title": "Moonlight"
 }

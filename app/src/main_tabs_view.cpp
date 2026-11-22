@@ -7,9 +7,12 @@
 
 #include "main_tabs_view.hpp"
 #include "Settings.hpp"
+
+#include <string>
 #include "about_tab.hpp"
 #include "add_host_tab.hpp"
 #include "host_tab.hpp"
+#include "raylees_tweaks_tab.hpp"
 #include "settings_tab.hpp"
 
 MainTabs::MainTabs() {
@@ -23,6 +26,8 @@ MainTabs::MainTabs() {
 
 void MainTabs::willAppear(bool resetState) {
     Box::willAppear(resetState);
+    getAppletFrameItem()->title = std::string("Moonlight ") + APP_VERSION;
+    updateAppletFrameItem();
     updateFavoritesIfNeeded();
     favoriteTab->refreshIfNeeded();
 }
@@ -62,6 +67,7 @@ void MainTabs::refillTabs(bool keepFocus) {
 
     addTab("tabs/add_host"_i18n, AddHostTab::create);
     addTab("tabs/settings"_i18n, SettingsTab::create);
+    addTab("tabs/raylees_tweaks"_i18n, RayleesTweaksTab::create);
     addSeparator();
     addTab("tabs/about"_i18n, AboutTab::create);
     sidebar->setContentOffsetY(-40, false);

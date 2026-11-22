@@ -322,6 +322,26 @@ SettingsTab::SettingsTab() {
         }
     });
 
+    std::vector<std::string> frameQueues = {"1", "2", "3", "4"};
+    frameQueue->setText("settings/frame_buffer"_i18n);
+    frameQueue->setData(frameQueues);
+    switch (Settings::instance().frames_queue_size()) {
+        GET_SETTINGS(frameQueue, 1, 0);
+        GET_SETTINGS(frameQueue, 2, 1);
+        GET_SETTINGS(frameQueue, 3, 2);
+        GET_SETTINGS(frameQueue, 4, 3);
+        DEFAULT;
+    }
+    frameQueue->getEvent()->subscribe([](int selected) {
+        switch (selected) {
+            SET_SETTING(0, set_frames_queue_size(1));
+            SET_SETTING(1, set_frames_queue_size(2));
+            SET_SETTING(2, set_frames_queue_size(3));
+            SET_SETTING(3, set_frames_queue_size(4));
+            DEFAULT;
+        }
+    });
+
     std::vector<VideoCodec> supportedCodecs = {
         H264,
 #if !defined(__PSV__)

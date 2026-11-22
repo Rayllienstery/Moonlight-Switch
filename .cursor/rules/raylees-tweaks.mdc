@@ -1,0 +1,12 @@
+---
+description: Moonlight Switch options go under Raylee's Tweaks, not Settings
+alwaysApply: true
+---
+
+# Raylee's Tweaks
+
+Do not add controls to Settings.
+
+The sidebar item directly under Settings is Raylee's Tweaks (`RayleesTweaksTab`, `resources/xml/tabs/raylees_tweaks.xml`). New options, selectors, and switches go on that page and save through `Settings::instance()`.
+
+Settings stays the upstream page. A control that already lives there stays there unless the user asks to move it.

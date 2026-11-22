@@ -129,6 +129,7 @@
         "debug": "除錯",
         "debugging_view": "顯示除錯畫面",
         "decoder_threads": "解碼器執行緒",
+        "frame_buffer": "Frame buffer",
         "fps": "FPS",
         "guide_key": "嚮導鍵（立即按下）",
         "guide_key_buttons": "按鍵組合",
@@ -204,7 +205,8 @@
         "about": "關於",
         "add_host": "添加主機",
         "favorites": "最愛",
-        "settings": "設定"
+        "settings": "設定",
+        "raylees_tweaks": "Raylee's Tweaks"
     },
     "title": "Moonlight"
 }

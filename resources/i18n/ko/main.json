@@ -129,6 +129,7 @@
         "debug": "디버그",
         "debugging_view": "디버깅 보기 표시",
         "decoder_threads": "디코더 스레드",
+        "frame_buffer": "Frame buffer",
         "fps": "FPS",
         "guide_key": "가이드 키 (즉시 클릭)",
         "guide_key_buttons": "버튼 조합",
@@ -204,7 +205,8 @@
         "about": "정보",
         "add_host": "호스트 추가",
         "favorites": "즐겨찾기",
-        "settings": "설정"
+        "settings": "설정",
+        "raylees_tweaks": "Raylee's Tweaks"
     },
     "title": "달빛"
 }

@@ -129,6 +129,7 @@
         "debug": "Debug",
         "debugging_view": "Mostrar la vista de debug",
         "decoder_threads": "Decoder Threads",
+        "frame_buffer": "Frame buffer",
         "fps": "FPS",
         "guide_key": "Botón de Guía (Activación inmediata)",
         "guide_key_buttons": "Combinación de botones",
@@ -204,7 +205,8 @@
         "about": "Acerca de",
         "add_host": "Añadir servidor",
         "favorites": "Favoritos",
-        "settings": "Ajustes"
+        "settings": "Ajustes",
+        "raylees_tweaks": "Raylee's Tweaks"
     },
     "title": "Moonlight"
 }
