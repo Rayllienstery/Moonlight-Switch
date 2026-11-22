@@ -22,6 +22,12 @@
             <brls:Header
                 title="@i18n/tabs/raylees_tweaks"/>
 
+            <brls:SelectorCell
+                id="link_host"/>
+
+            <brls:DetailCell
+                id="link_test"/>
+
         </brls:Box>
     </brls:ScrollingFrame>
 </brls:Box>

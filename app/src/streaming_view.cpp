@@ -10,6 +10,10 @@
 #endif
 
 #include "streaming_view.hpp"
+#include "diagnostics_log.hpp"
+#include "stream_fault.hpp"
+
+#include <algorithm>
 #ifdef __SWITCH2__
 #include "streaming/video/Vulkan/Switch2VulkanContext.hpp"
 #endif
@@ -365,19 +369,50 @@ void StreamingView::draw(NVGcontext* vg, float x, float y, float width,
     handleOverlayCombo();
     handleMouseInputCombo();
 
-    if (session->connection_status_is_poor()) {
-        nvgFontSize(vg, 20);
-        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
+    const auto now = std::chrono::steady_clock::now();
+    if (!streamContextLogged && session->is_active()) {
+        DiagnosticsLog::write(describeStreamContext());
+        streamContextLogged = true;
+    }
+    if (session->is_active() &&
+        (loadSampledAt.time_since_epoch().count() == 0 ||
+         now - loadSampledAt >= std::chrono::milliseconds(250))) {
+        cachedLoad = SwitchLoad::instance().sample();
+        loadSampledAt = now;
+    }
 
-        nvgFontBlur(vg, 3);
-        nvgFillColor(vg, nvgRGBA(0, 0, 0, 255));
+    const bool poor = session->connection_status_is_poor();
+    if (poor) {
+        faultText = describeStreamFault(*session->session_stats(), cachedLoad,
+                                         Settings::instance().fps(),
+                                         Settings::instance().bitrate());
+        faultHideAt = now + std::chrono::seconds(10);
+        if (faultLoggedAt.time_since_epoch().count() == 0 ||
+            now - faultLoggedAt >= std::chrono::seconds(1)) {
+            DiagnosticsLog::write(faultText);
+            faultLoggedAt = now;
+        }
+    } else if (faultWasPoor) {
+        DiagnosticsLog::write(
+            "Bad connection cleared. The message stays on screen for 10 seconds.");
+    }
+    faultWasPoor = poor;
+
+    if (now < faultHideAt && !faultText.empty()) {
         nvgFontFaceId(vg, Application::getFont(FONT_REGULAR));
-        nvgText(vg, 50, height - 28, "\uE140 Bad connection...", nullptr);
-
+        nvgFontSize(vg, 18);
+        nvgTextAlign(vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         nvgFontBlur(vg, 0);
+        float bounds[4] = {};
+        nvgTextBoxBounds(vg, 24, 0, width - 48, faultText.c_str(), nullptr, bounds);
+        const float textHeight = std::max(0.0f, bounds[3] - bounds[1]);
+        const float top = std::max(16.0f, height - textHeight - 28.0f);
+        nvgBeginPath(vg);
+        nvgRoundedRect(vg, 12, top - 8, width - 24, textHeight + 20, 8);
+        nvgFillColor(vg, nvgRGBA(0, 0, 0, 190));
+        nvgFill(vg);
         nvgFillColor(vg, nvgRGBA(255, 255, 255, 255));
-        nvgFontFaceId(vg, Application::getFont(FONT_REGULAR));
-        nvgText(vg, 50, height - 28, "\uE140 Bad connection...", nullptr);
+        nvgTextBox(vg, 24, top, width - 48, faultText.c_str(), nullptr);
     }
 
     if (session->use_hdr() != m_use_hdr) {

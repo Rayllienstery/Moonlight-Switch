@@ -13,4 +13,9 @@ class RayleesTweaksTab : public brls::Box {
     ~RayleesTweaksTab();
 
     static brls::View* create();
+
+  private:
+    int hostIndex = 0;
+    BRLS_BIND(brls::SelectorCell, linkHost, "link_host");
+    BRLS_BIND(brls::DetailCell, linkTest, "link_test");
 };

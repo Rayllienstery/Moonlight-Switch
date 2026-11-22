@@ -73,7 +73,8 @@ endif ()
 
 set(VERSION_MAJOR "1")
 set(VERSION_MINOR "6")
-set(VERSION_ALTER "1")
+set(VERSION_ALTER "2")
+set(VERSION_CHANNEL "Dev")
 set(VERSION_BUILD "1")
 set(PACKAGE_NAME "ru.xitrix.Moonlight")
 set(PSN_TITLE_ID  "MNTL00000")
@@ -139,11 +140,12 @@ if (DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
 endif ()
 
 add_definitions(
-        -DAPP_VERSION="${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER}"
         -Dcimg_display=0
         -Dcimg_use_png
         -Dcimg_no_system_calls
         -DBRLS_I18N_PREFIX=\"main/\")
+
+add_compile_definitions("APP_VERSION=\"${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_ALTER} (${VERSION_CHANNEL})\"")
 
 if (PLATFORM_PSV OR PLATFORM_ANDROID)
     set(USE_OPENSSL_CRYPTO ON)

@@ -16,6 +16,7 @@
 #include <optional>
 #include "GameStreamClient.hpp"
 #include "MoonlightSession.hpp"
+#include "switch_load.hpp"
 #include "two_finger_scroll_recognizer.hpp"
 
 class StreamingView : public brls::Box {
@@ -62,6 +63,13 @@ class StreamingView : public brls::Box {
 
     std::string buildStatsText();
     std::string statsText;
+    std::string faultText;
+    std::chrono::steady_clock::time_point faultHideAt{};
+    std::chrono::steady_clock::time_point faultLoggedAt{};
+    std::chrono::steady_clock::time_point loadSampledAt{};
+    ConsoleLoad cachedLoad{};
+    bool streamContextLogged = false;
+    bool faultWasPoor = false;
     std::chrono::steady_clock::time_point statsTextTime{};
     float statsBounds[4] = {0, 0, 0, 0};
 
