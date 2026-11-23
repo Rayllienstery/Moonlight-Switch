@@ -60,7 +60,18 @@ void MainTabs::refillTabs(bool keepFocus) {
 
     auto hosts = Settings::instance().hosts();
     for (const Host& host : hosts) {
-        addTab(host.hostname, [host] { return new HostTab(host); });
+        const std::string address = host.preferred_address();
+        addTab(host.hostname, [address] {
+            Host current;
+            current.address = address;
+            for (const Host& saved : Settings::instance().hosts()) {
+                if (saved.preferred_address() == address || saved.has_address(address)) {
+                    current = saved;
+                    break;
+                }
+            }
+            return new HostTab(current);
+        });
     }
     if (!hosts.empty())
         addSeparator();

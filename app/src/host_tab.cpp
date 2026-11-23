@@ -22,9 +22,27 @@ std::string host_subtitle(const Host& host) {
     }
     return subtitle;
 }
+
+// The sidebar builds the host tab from a snapshot taken at launch. A MAC
+// learned later is written to settings, but that snapshot stays empty, so
+// Wake refuses before a packet is sent.
+void apply_saved_mac(Host& host) {
+    if (!normalized_mac_address(host.mac).empty())
+        return;
+
+    for (const Host& saved : Settings::instance().hosts()) {
+        if (!hosts_match(saved, host))
+            continue;
+        if (const std::string mac = normalized_mac_address(saved.mac); !mac.empty())
+            host.mac = mac;
+        return;
+    }
+}
 }
 
 HostTab::HostTab(const Host& host) : host(host) {
+    apply_saved_mac(this->host);
+
     // Inflate the tab from the XML file
     this->inflateFromXMLRes("xml/tabs/host.xml");
 
@@ -53,6 +71,7 @@ HostTab::HostTab(const Host& host) : host(host) {
             this->present(new AppListView(this->host));
             break;
         case UNAVAILABLE:
+            apply_saved_mac(this->host);
             if (GameStreamClient::can_wake_up_host(this->host)) {
                 const auto wakeRequestId = ++this->wakeRequestGeneration;
                 this->canceledWakeRequestGeneration = 0;
