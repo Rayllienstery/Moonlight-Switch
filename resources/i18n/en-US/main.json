@@ -93,7 +93,8 @@
         "wait": "Wait...",
         "wake_up": "Wake up",
         "wake_up_error": "Could not wake up the host",
-        "wake_up_message": "Sending Wake Up"
+        "wake_up_message": "Sending Wake Up",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "Remove layout",

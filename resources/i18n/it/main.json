@@ -93,7 +93,8 @@
         "wait": "Attendi...",
         "wake_up": "Risveglia",
         "wake_up_error": "Impossibile risvegliare l'host",
-        "wake_up_message": "Inviando messaggio di risveglio"
+        "wake_up_message": "Inviando messaggio di risveglio",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "Rimuovi layout",

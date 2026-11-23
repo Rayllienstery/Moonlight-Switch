@@ -93,7 +93,8 @@
         "wait": "기다려 주세요...",
         "wake_up": "깨우기",
         "wake_up_error": "호스트를 깨울 수 없음",
-        "wake_up_message": "깨우기 보내기"
+        "wake_up_message": "깨우기 보내기",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "레이아웃 제거",

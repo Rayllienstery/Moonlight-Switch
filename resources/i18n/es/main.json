@@ -93,7 +93,8 @@
         "wait": "Espera...",
         "wake_up": "Reanudar",
         "wake_up_error": "No se pudo reanudar el servidor",
-        "wake_up_message": "Reanudando"
+        "wake_up_message": "Reanudando",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "Eliminar diseño",

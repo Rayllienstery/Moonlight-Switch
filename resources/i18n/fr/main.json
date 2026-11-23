@@ -93,7 +93,8 @@
         "wait": "En attente...",
         "wake_up": "Réveiller",
         "wake_up_error": "L'hôte n'a pas pu être réveillé",
-        "wake_up_message": "Réveil en cours..."
+        "wake_up_message": "Réveil en cours...",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "Supprimer la configuration",

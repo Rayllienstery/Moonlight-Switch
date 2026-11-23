@@ -93,7 +93,8 @@
         "wait": "Warten...",
         "wake_up": "Aufwecken",
         "wake_up_error": "Host konnte nicht geweckt werden",
-        "wake_up_message": "Host wird geweckt"
+        "wake_up_message": "Host wird geweckt",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "Layout entfernen",

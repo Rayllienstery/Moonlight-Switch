@@ -93,7 +93,8 @@
         "wait": "等待中……",
         "wake_up": "喚醒",
         "wake_up_error": "無法喚醒主機",
-        "wake_up_message": "發送喚醒請求"
+        "wake_up_message": "發送喚醒請求",
+        "wake_up_no_mac": "MAC address was not found. Wake will not work."
     },
     "mapping_layout_editor": {
         "remove": "移除佈局",

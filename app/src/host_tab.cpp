@@ -96,6 +96,8 @@ HostTab::HostTab(const Host& host) : host(host) {
                             }
                         });
                     });
+            } else {
+                showError("host/wake_up_no_mac"_i18n);
             }
             break;
         case FETCHING:
