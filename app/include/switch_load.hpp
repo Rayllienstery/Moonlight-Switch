@@ -19,7 +19,4 @@ class SwitchLoad {
     bool ensureOpen();
 
     bool opened = false;
-    bool havePrevious = false;
-    unsigned long long previousTick = 0;
-    unsigned long long previousIdle[3] = {};
 };

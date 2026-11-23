@@ -33,3 +33,13 @@ When something goes wrong, write one session log that states the facts in order:
 - The seconds before the fault, not only the single error line
 
 Plain sentences, with the numbers next to them. No need to guess which counter a bare integer was.
+
+## WireGuard connect, separate from LAN
+
+The 1.5.0 client on the WG Moonlight tile (`E:\switch\Moonlight-Switch\Moonlight-Switch.nro`, Moonlight WG) can already reach the PC through WireGuard. That nro stays as it is. This client does not replace it.
+
+On the host screen, `Connect` (`resources/xml/tabs/host.xml`, the `connect` cell) stays the LAN connect. It still dials `192.168.50.115` on Ethernet and does not bring a tunnel up.
+
+Add a second cell directly under that `Connect` row. It is the only WireGuard entry. Choosing it brings up the same Switch WireGuard the 1.5.0 client uses (`swg`) and connects to the PC over Keenetic `10.6.0.0/24`. The stream then uses that tunnel. It does not live on Settings or on Raylee's Tweaks.
+
+One host, two rows. `Connect` never tries the tunnel. The WireGuard row never falls through to the LAN socket. If the tunnel does not come up, that row says so and stops.

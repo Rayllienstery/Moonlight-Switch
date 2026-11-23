@@ -3,6 +3,7 @@
 #include "GameStreamClient.hpp"
 #include "InputManager.hpp"
 #include "Settings.hpp"
+#include "diagnostics_log.hpp"
 #include "borealis.hpp"
 #include <atomic>
 #include <string.h>
@@ -371,11 +372,20 @@ void MoonlightSession::start(ServerCallback<bool> callback, bool is_sunshine) {
         m_audio_callbacks.capabilities = m_audio_renderer->capabilities();
     }
 
+    DiagnosticsLog::write("Asking the host to launch app " + std::to_string(m_app_id) +
+                          " at " + m_address + ".");
     GameStreamClient::instance().start(
         m_address, m_config, m_app_id, [this, callback](auto result) {
             if (result.isSuccess()) {
                 m_config = result.value();
+                DiagnosticsLog::write("The host accepted the launch. Opening the video stream.");
                 brls::async([this, callback]() mutable {
+                    if (m_stop_requested || m_is_terminated || m_active_session != this) {
+                        brls::sync([callback] {
+                            callback(GSResult<bool>::failure("error/stream_start"_i18n));
+                        });
+                        return;
+                    }
                     auto m_data =
                         GameStreamClient::instance().server_data(m_address);
 
@@ -383,18 +393,24 @@ void MoonlightSession::start(ServerCallback<bool> callback, bool is_sunshine) {
                         &m_data.serverInfo, &m_config, &m_connection_callbacks,
                         &m_video_callbacks, &m_audio_callbacks, NULL, 0, NULL, 0);
 
-                    if (result != 0) {
+                    if (result != 0)
                         LiStopConnection();
-                        callback(
-                            GSResult<bool>::failure("error/stream_start"_i18n));
-                    } else {
-                        callback(GSResult<bool>::success(true));
-                    }
+                    DiagnosticsLog::write(result == 0
+                                              ? "The video stream socket is open."
+                                              : "The video stream failed to open. Code " +
+                                                    std::to_string(result) + ".");
+                    brls::sync([callback, result] {
+                        if (result != 0)
+                            callback(GSResult<bool>::failure("error/stream_start"_i18n));
+                        else
+                            callback(GSResult<bool>::success(true));
+                    });
                 });
             } else {
                 brls::Logger::error(
                     "MoonlightSession: Failed to start stream: {}",
                     result.error().c_str());
+                DiagnosticsLog::write("The host rejected the launch. " + result.error());
                 callback(GSResult<bool>::failure(result.error()));
             }
         });

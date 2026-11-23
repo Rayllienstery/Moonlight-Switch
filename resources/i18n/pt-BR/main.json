@@ -208,5 +208,9 @@
         "settings": "Configurações",
         "raylees_tweaks": "Raylee's Tweaks"
     },
+    "tweaks": {
+        "frame_buffer": "Frame buffer",
+        "link_test": "Link test"
+    },
     "title": "Moonlight"
 }

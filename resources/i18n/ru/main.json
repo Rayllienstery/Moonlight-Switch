@@ -208,5 +208,9 @@
         "settings": "Настройки",
         "raylees_tweaks": "Raylee's Tweaks"
     },
+    "tweaks": {
+        "frame_buffer": "Буфер кадров",
+        "link_test": "Проверка связи"
+    },
     "title": "Moonlight"
 }

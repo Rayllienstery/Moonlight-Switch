@@ -20,7 +20,15 @@
             paddingLeft="@style/brls/tab_details/padding_left">
 
             <brls:Header
-                title="@i18n/tabs/raylees_tweaks"/>
+                title="@i18n/tweaks/frame_buffer"/>
+
+            <brls:SelectorCell
+                id="frame_queue"/>
+
+            <brls:Header
+                title="@i18n/tweaks/link_test"
+                paddingTop="60"
+                lineTop="1px"/>
 
             <brls:SelectorCell
                 id="link_host"/>
