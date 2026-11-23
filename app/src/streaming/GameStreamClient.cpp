@@ -61,8 +61,8 @@ void rebind_server_info(SERVER_DATA& server) {
 }
 
 std::string host_key(const Host& host) {
-    if (!host.mac.empty()) {
-        return "mac:" + host.mac;
+    if (const std::string mac = normalized_mac_address(host.mac); !mac.empty()) {
+        return "mac:" + mac;
     }
     if (!host.address.empty()) {
         return "address:" + host.address;
@@ -92,8 +92,8 @@ void merge_discovered_host(std::vector<Host>& hosts, const Host& host) {
     if (!host.hostname.empty()) {
         it->hostname = host.hostname;
     }
-    if (!host.mac.empty()) {
-        it->mac = host.mac;
+    if (const std::string mac = normalized_mac_address(host.mac); !mac.empty()) {
+        it->mac = mac;
     }
 }
 
@@ -553,7 +553,9 @@ void GameStreamClient::wake_up_host(const Host& host,
                 client.cache_server_data(connectedAddress, connectedServer);
                 client.m_active_addresses[host_key(host)] = connectedAddress;
 
-                brls::sync([callback] {
+                brls::sync([callback, connectedAddress, connectedServer] {
+                    Settings::instance().remember_host_mac(connectedAddress,
+                                                           connectedServer.mac);
                     callback(GSResult<bool>::success(true));
                 });
                 return;
@@ -576,8 +578,8 @@ void GameStreamClient::cache_server_data(const std::string& address,
                                          const SERVER_DATA& data) {
     m_server_data[address] = data;
     rebind_server_info(m_server_data[address]);
-    if (!data.mac.empty()) {
-        m_active_addresses["mac:" + data.mac] = address;
+    if (const std::string mac = normalized_mac_address(data.mac); !mac.empty()) {
+        m_active_addresses["mac:" + mac] = address;
     }
 }
 
@@ -607,6 +609,8 @@ void GameStreamClient::connect_to_addresses(
             }
 
             cache_server_data(connectedAddress, connectedServer);
+            Settings::instance().remember_host_mac(connectedAddress,
+                                                   connectedServer.mac);
             if (!activeKey.empty()) {
                 m_active_addresses[activeKey] = connectedAddress;
             }

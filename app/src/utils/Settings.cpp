@@ -36,8 +36,17 @@ void merge_host(Host& target, const Host& source) {
         target.remoteAddress = source.remoteAddress;
     if (!source.hostname.empty())
         target.hostname = source.hostname;
-    if (!source.mac.empty())
-        target.mac = source.mac;
+    if (const std::string mac = normalized_mac_address(source.mac); !mac.empty())
+        target.mac = mac;
+}
+
+std::string address_without_port(const std::string& address) {
+    if (address.empty() || address.front() == '[')
+        return address;
+    const auto first = address.find(':');
+    if (first == std::string::npos || address.find(':', first + 1) != std::string::npos)
+        return address;
+    return address.substr(0, first);
 }
 
 std::string make_preferred_path(const fs::path& path) {
@@ -94,13 +103,33 @@ void Settings::set_working_dir(const std::string& working_dir) {
 }
 
 void Settings::add_host(const Host& host) {
-    if (Host* existing = find_host(m_hosts, host)) {
-        merge_host(*existing, host);
-    } else if (!host.preferred_address().empty() && !host.mac.empty()) {
-        m_hosts.push_back(host);
+    Host incoming = host;
+    incoming.mac = normalized_mac_address(host.mac);
+    if (Host* existing = find_host(m_hosts, incoming)) {
+        merge_host(*existing, incoming);
+    } else if (!incoming.preferred_address().empty()) {
+        m_hosts.push_back(incoming);
     }
 
     save();
+}
+
+void Settings::remember_host_mac(const std::string& address, const std::string& mac) {
+    const std::string usable = normalized_mac_address(mac);
+    const std::string bare = address_without_port(address);
+    if (usable.empty() || bare.empty())
+        return;
+
+    for (Host& host : m_hosts) {
+        if (!host.has_address(address) && !host.has_address(bare))
+            continue;
+        if (host.mac == usable)
+            return;
+        host.mac = usable;
+        save();
+        brls::Logger::info("Settings: Saved host MAC {} for {}", usable, bare);
+        return;
+    }
 }
 
 void Settings::remove_host(const Host& host) {
@@ -244,7 +273,7 @@ void Settings::load() {
                         
                         if (json_t* mac = json_object_get(json, "mac")) {
                             if (json_typeof(mac) == JSON_STRING) {
-                                host.mac = json_string_value(mac);
+                                host.mac = normalized_mac_address(json_string_value(mac));
                             }
                         }
 

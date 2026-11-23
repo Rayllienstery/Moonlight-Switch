@@ -129,6 +129,7 @@ static int load_serverinfo(PSERVER_DATA server, bool https) {
 
     if (xml_search(data, "mac", &server->mac) != GS_OK)
         goto cleanup;
+    server->mac = normalized_mac_address(server->mac);
 
     // These fields are present on all version of GFE that this client
     // supports

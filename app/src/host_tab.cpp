@@ -129,6 +129,9 @@ void HostTab::reloadHost() {
             ASYNC_RELEASE
 
             if (result.isSuccess()) {
+                if (const std::string mac = normalized_mac_address(result.value().mac);
+                    !mac.empty())
+                    this->host.mac = mac;
                 const auto connectedAddress =
                     GameStreamClient::instance().active_address(this->host);
                 header->setTitle("host/status"_i18n + ": " + "host/ready"_i18n);

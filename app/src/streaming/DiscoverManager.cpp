@@ -7,6 +7,7 @@
 
 #include "DiscoverManager.hpp"
 #include "GameStreamClient.hpp"
+#include "Settings.hpp"
 #include <algorithm>
 
 #if defined(PLATFORM_PSV)
@@ -195,8 +196,9 @@ void DiscoverManager::loop() {
                     if (!host.hostname.empty()) {
                         it->hostname = host.hostname;
                     }
-                    if (!host.mac.empty()) {
-                        it->mac = host.mac;
+                    if (const std::string mac = normalized_mac_address(host.mac);
+                        !mac.empty()) {
+                        it->mac = mac;
                     }
                 }
                 brls::Logger::info("Host discovery found {} at {}", host.hostname,

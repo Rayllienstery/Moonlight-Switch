@@ -48,20 +48,14 @@ constexpr std::array<unsigned short, 5> DYNAMIC_WOL_PORTS = {
 };
 
 std::string normalize_mac_address(const std::string& mac) {
-    std::string normalized;
-    normalized.reserve(mac.size());
-
-    for (unsigned char ch : mac) {
-        if (std::isxdigit(ch)) {
-            normalized.push_back(static_cast<char>(std::toupper(ch)));
-        } else if (ch == ':' || ch == '-' || std::isspace(ch)) {
-            continue;
-        } else {
-            return "";
-        }
+    const std::string formatted = normalized_mac_address(mac);
+    std::string hex;
+    hex.reserve(12);
+    for (char ch : formatted) {
+        if (ch != ':')
+            hex.push_back(ch);
     }
-
-    return normalized.size() == 12 ? normalized : "";
+    return hex;
 }
 
 bool try_parse_port(const std::string& portText, unsigned short& port) {

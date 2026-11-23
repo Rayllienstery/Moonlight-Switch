@@ -2,6 +2,7 @@
 
 #include "Singleton.hpp"
 #include <borealis.hpp>
+#include <cctype>
 #include <map>
 #include <cstdio>
 #include <string>
@@ -69,9 +70,37 @@ struct Host {
     }
 };
 
+// Sunshine sends 00:00:00:00:00:00 on HTTP serverinfo. That placeholder is not
+// an adapter address, and a magic packet built from it cannot wake the host.
+inline std::string normalized_mac_address(const std::string& mac) {
+    std::string hex;
+    hex.reserve(mac.size());
+    for (unsigned char ch : mac) {
+        if (std::isxdigit(ch))
+            hex.push_back(static_cast<char>(std::toupper(ch)));
+        else if (ch == ':' || ch == '-' || std::isspace(ch))
+            continue;
+        else
+            return "";
+    }
+    if (hex.size() != 12 || hex == "000000000000")
+        return "";
+
+    std::string formatted;
+    formatted.reserve(17);
+    for (size_t i = 0; i < hex.size(); ++i) {
+        if (i != 0 && i % 2 == 0)
+            formatted.push_back(':');
+        formatted.push_back(hex[i]);
+    }
+    return formatted;
+}
+
 inline bool hosts_match(const Host& lhs, const Host& rhs) {
-    if (!lhs.mac.empty() && !rhs.mac.empty())
-        return lhs.mac == rhs.mac;
+    const std::string leftMac = normalized_mac_address(lhs.mac);
+    const std::string rightMac = normalized_mac_address(rhs.mac);
+    if (!leftMac.empty() && !rightMac.empty())
+        return leftMac == rightMac;
 
     for (const auto& address : lhs.connection_addresses()) {
         if (rhs.has_address(address))
@@ -101,6 +130,7 @@ class Settings : public Singleton<Settings> {
     [[nodiscard]] std::vector<Host> hosts() const { return m_hosts; }
 
     void add_host(const Host& host);
+    void remember_host_mac(const std::string& address, const std::string& mac);
     void remove_host(const Host& host);
 
     void add_favorite(const Host& host, const App& app);
